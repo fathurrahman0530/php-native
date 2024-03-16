@@ -1,10 +1,20 @@
 <?php
+require('app/config/database.php');
+session_start();
 
-require('database/conn.php');
+isset($_REQUEST['page']) ? $page = $_REQUEST['page'] : '';
 
 if (isset($_SESSION['uniq_id_user'])) {
-    include('layouts/master.php');
+    header('Location: index.php?page=home');
 } else {
-    echo "Maaf anda belum melakukan login.., Silahkan login terlebih dahulu...!!!";
-    /* include('login.php'); */
+    // jika request page not found
+    if (!isset($_REQUEST['page']) && !isset($_REQUEST['action'])) {
+        header('Location: index.php?page=login');
+    } elseif(isset($_REQUEST['action'])) {
+        include('app/controller/AuthController.php');
+    }
+}
+
+if(isset($_REQUEST['page'])){
+    include('app/controller/PageController.php');
 }
